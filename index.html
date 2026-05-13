@@ -3,120 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AEON Future Shop</title>
+    <title>Farmz Plug</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-dark: #0a0b10;
-            --neon-blue: #00f3ff;
+            --bg-dark: #050505;
+            --neon-green: #39ff14;
             --neon-purple: #bc13fe;
             --text-main: #ffffff;
-            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass: rgba(255, 255, 255, 0.07);
         }
 
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0; padding: 0;
-            background: radial-gradient(circle at top, #1a1b25 0%, #0a0b10 100%);
+            background: linear-gradient(180deg, #0f170f 0%, #050505 100%);
         }
 
         header {
-            padding: 30px;
+            padding: 25px;
             text-align: center;
-            font-size: 1.5rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px var(--neon-blue);
-            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: var(--neon-green);
+            text-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+            border-bottom: 1px solid rgba(57, 255, 20, 0.2);
         }
 
         .container { padding: 15px; }
 
         .product-card {
-            background: var(--card-bg);
+            background: var(--glass);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
+            border-radius: 24px;
             margin-bottom: 25px;
             overflow: hidden;
-            backdrop-filter: blur(10px);
-            transition: 0.3s;
+            backdrop-filter: blur(12px);
         }
 
-        .product-card:hover {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
-        }
-
-        video { width: 100%; display: block; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        video { width: 100%; display: block; border-bottom: 1px solid rgba(57, 255, 20, 0.1); }
 
         .product-info { padding: 20px; }
 
-        .product-title { font-size: 1.2rem; font-weight: 300; margin-bottom: 10px; }
+        .product-title { font-size: 1.4rem; font-weight: bold; margin-bottom: 5px; }
 
-        .product-price { color: var(--neon-blue); font-size: 1.3rem; font-weight: bold; }
+        .price-tag { color: var(--neon-green); font-size: 1.2rem; margin-bottom: 15px; display: block;}
+
+        .qty-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .qty-btn {
+            background: var(--neon-green);
+            border: none; width: 35px; height: 35px;
+            border-radius: 8px; font-weight: bold; cursor: pointer;
+        }
 
         .order-btn {
             width: 100%;
-            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            margin-top: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(90deg, #39ff14, #2ebf10);
+            color: black;
+            border: none; padding: 16px;
+            border-radius: 14px; font-weight: 800;
+            text-transform: uppercase; cursor: pointer;
         }
 
-        /* Styles du Formulaire */
+        /* Modal */
         #order-form-overlay {
             display: none; position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.9); z-index:1000; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.95); z-index:1000; justify-content: center; align-items: center;
         }
 
         .form-card {
-            background: #161b22; width: 85%; padding: 25px; border-radius: 20px;
-            border: 1px solid var(--neon-blue);
+            background: #111; width: 85%; padding: 25px; border-radius: 24px;
+            border: 1px solid var(--neon-green);
         }
 
         input, select, textarea {
-            width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px;
-            background: #0d1117; border: 1px solid #30363d; color: white;
+            width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px;
+            background: #1a1a1a; border: 1px solid #333; color: white; box-sizing: border-box;
         }
     </style>
 </head>
 <body>
 
-<header>AEON FUTURE</header>
+<header>FARMZ PLUG</header>
 
-<div class="container">
+<div class="container" id="shop">
     <!-- Article 1 -->
-    <div class="product-card">
+    <div class="product-card" data-price-unit="10">
         <video autoplay loop muted playsinline>
             <source src="TA_VIDEO_1.mp4" type="video/mp4">
         </video>
         <div class="product-info">
-            <div class="product-title">Cyber Armor X-1</div>
-            <div class="product-price">150.00 €</div>
-            <button class="order-btn" onclick="openForm('Cyber Armor X-1', 150)">Commander</button>
+            <div class="product-title">California Kush</div>
+            <span class="price-tag">Prix: <span class="total-price">10</span>€</span>
+            
+            <div class="qty-selector">
+                <span>Quantité (g) :</span>
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
+                    <b class="qty-val">1</b>
+                    <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+                </div>
+            </div>
+
+            <button class="order-btn" onclick="openForm(this)">Réserver</button>
         </div>
     </div>
-    <!-- Répéter pour les 3 autres articles... -->
+
+    <!-- Article 2 -->
+    <div class="product-card" data-price-unit="12">
+        <video autoplay loop muted playsinline>
+            <source src="TA_VIDEO_2.mp4" type="video/mp4">
+        </video>
+        <div class="product-info">
+            <div class="product-title">Frozen Hash</div>
+            <span class="price-tag">Prix: <span class="total-price">12</span>€</span>
+            
+            <div class="qty-selector">
+                <span>Quantité (g) :</span>
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <button class="qty-btn" onclick="updateQty(this, -1)">-</button>
+                    <b class="qty-val">1</b>
+                    <button class="qty-btn" onclick="updateQty(this, 1)">+</button>
+                </div>
+            </div>
+
+            <button class="order-btn" onclick="openForm(this)">Réserver</button>
+        </div>
+    </div>
+    <!-- Tu peux copier-coller les blocs product-card pour arriver à 4 -->
 </div>
 
-<!-- Modal Formulaire (même logique que précédemment) -->
 <div id="order-form-overlay">
     <div class="form-card">
-        <h2 id="form-item-name">COMMANDE</h2>
+        <h2 id="summary-title" style="color:var(--neon-green); margin-top:0;">COMMANDE</h2>
+        <p id="summary-details"></p>
         <select id="payment-method">
             <option value="PCS">TICKET PCS</option>
-            <option value="Espèces">ESPÈCES</option>
+            <option value="Espèces">ESPÈCES (MAIN PROPRE)</option>
         </select>
-        <textarea id="address" placeholder="ADRESSE DE LIVRAISON"></textarea>
-        <button class="order-btn" onclick="sendOrder()">VALIDER LE PAIEMENT</button>
+        <textarea id="address" placeholder="ADRESSE OU POINT DE RDV"></textarea>
+        <button class="order-btn" onclick="sendOrder()">CONFIRMER LA COMMANDE</button>
+        <button onclick="document.getElementById('order-form-overlay').style.display='none'" style="background:none; border:none; color:grey; width:100%; margin-top:10px;">Annuler</button>
     </div>
 </div>
 
@@ -124,19 +163,50 @@
     let tg = window.Telegram.WebApp;
     tg.expand();
 
-    function openForm(name, price) {
-        document.getElementById('form-item-name').innerText = name;
+    let finalOrder = {};
+
+    function updateQty(btn, change) {
+        const card = btn.closest('.product-card');
+        const qtyDisplay = card.querySelector('.qty-val');
+        const priceDisplay = card.querySelector('.total-price');
+        const unitPrice = parseFloat(card.getAttribute('data-price-unit'));
+        
+        let currentQty = parseInt(qtyDisplay.innerText);
+        currentQty = Math.max(1, currentQty + change); // Minimum 1g
+        
+        qtyDisplay.innerText = currentQty;
+        priceDisplay.innerText = (currentQty * unitPrice).toFixed(2);
+    }
+
+    function openForm(btn) {
+        const card = btn.closest('.product-card');
+        const title = card.querySelector('.product-title').innerText;
+        const qty = card.querySelector('.qty-val').innerText;
+        const price = card.querySelector('.total-price').innerText;
+
+        finalOrder = { title, qty, price };
+
+        document.getElementById('summary-details').innerText = `${title} - ${qty}g (${price}€)`;
         document.getElementById('order-form-overlay').style.display = 'flex';
     }
 
     function sendOrder() {
-        const data = {
-            item: document.getElementById('form-item-name').innerText,
-            payment: document.getElementById('payment-method').value,
-            address: document.getElementById('address').value,
-            user: tg.initDataUnsafe.user ? tg.initDataUnsafe.user.username : "Anonyme"
+        const method = document.getElementById('payment-method').value;
+        const addr = document.getElementById('address').value;
+
+        if(!addr) return alert("Indique une adresse !");
+
+        const message = {
+            shop: "Farmz Plug",
+            produit: finalOrder.title,
+            quantite: finalOrder.qty + "g",
+            total: finalOrder.price + "€",
+            paiement: method,
+            adresse: addr,
+            client: tg.initDataUnsafe.user ? "@" + tg.initDataUnsafe.user.username : "Inconnu"
         };
-        tg.sendData(JSON.stringify(data));
+
+        tg.sendData(JSON.stringify(message));
         tg.close();
     }
 </script>
