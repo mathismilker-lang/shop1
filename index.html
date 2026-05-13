@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AEON Future Shop</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0a0b10;
+            --neon-blue: #00f3ff;
+            --neon-purple: #bc13fe;
+            --text-main: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0; padding: 0;
+            background: radial-gradient(circle at top, #1a1b25 0%, #0a0b10 100%);
+        }
+
+        header {
+            padding: 30px;
+            text-align: center;
+            font-size: 1.5rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px var(--neon-blue);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .container { padding: 15px; }
+
+        .product-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+
+        .product-card:hover {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+        }
+
+        video { width: 100%; display: block; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+
+        .product-info { padding: 20px; }
+
+        .product-title { font-size: 1.2rem; font-weight: 300; margin-bottom: 10px; }
+
+        .product-price { color: var(--neon-blue); font-size: 1.3rem; font-weight: bold; }
+
+        .order-btn {
+            width: 100%;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Styles du Formulaire */
+        #order-form-overlay {
+            display: none; position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.9); z-index:1000; justify-content: center; align-items: center;
+        }
+
+        .form-card {
+            background: #161b22; width: 85%; padding: 25px; border-radius: 20px;
+            border: 1px solid var(--neon-blue);
+        }
+
+        input, select, textarea {
+            width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px;
+            background: #0d1117; border: 1px solid #30363d; color: white;
+        }
+    </style>
+</head>
+<body>
+
+<header>AEON FUTURE</header>
+
+<div class="container">
+    <!-- Article 1 -->
+    <div class="product-card">
+        <video autoplay loop muted playsinline>
+            <source src="TA_VIDEO_1.mp4" type="video/mp4">
+        </video>
+        <div class="product-info">
+            <div class="product-title">Cyber Armor X-1</div>
+            <div class="product-price">150.00 €</div>
+            <button class="order-btn" onclick="openForm('Cyber Armor X-1', 150)">Commander</button>
+        </div>
+    </div>
+    <!-- Répéter pour les 3 autres articles... -->
+</div>
+
+<!-- Modal Formulaire (même logique que précédemment) -->
+<div id="order-form-overlay">
+    <div class="form-card">
+        <h2 id="form-item-name">COMMANDE</h2>
+        <select id="payment-method">
+            <option value="PCS">TICKET PCS</option>
+            <option value="Espèces">ESPÈCES</option>
+        </select>
+        <textarea id="address" placeholder="ADRESSE DE LIVRAISON"></textarea>
+        <button class="order-btn" onclick="sendOrder()">VALIDER LE PAIEMENT</button>
+    </div>
+</div>
+
+<script>
+    let tg = window.Telegram.WebApp;
+    tg.expand();
+
+    function openForm(name, price) {
+        document.getElementById('form-item-name').innerText = name;
+        document.getElementById('order-form-overlay').style.display = 'flex';
+    }
+
+    function sendOrder() {
+        const data = {
+            item: document.getElementById('form-item-name').innerText,
+            payment: document.getElementById('payment-method').value,
+            address: document.getElementById('address').value,
+            user: tg.initDataUnsafe.user ? tg.initDataUnsafe.user.username : "Anonyme"
+        };
+        tg.sendData(JSON.stringify(data));
+        tg.close();
+    }
+</script>
+</body>
+</html>
